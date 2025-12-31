@@ -1,48 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { ToastProvider } from "./components/ToastProvider";
+import { DashboardLayout } from "./layout/DashboardLayout";
+import HomePage from "./pages/HomePage";
+import UploadsPage from "./pages/UploadsPage";
+import TransactionsPage from "./pages/TransactionsPage";
+import ClassificationPage from "./pages/ClassificationPage";
+import SummariesPage from "./pages/SummariesPage";
+import PnLPage from "./pages/PnLPage";
+import ReconciliationPage from "./pages/ReconciliationPage";
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * App entry: routes + dashboard layout + toasts.
+ */
 function App() {
-  const [theme, setTheme] = useState('light');
-
-  // Effect to apply theme to document element
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  // PUBLIC_INTERFACE
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <ToastProvider />
+      <Routes>
+        <Route element={<DashboardLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="/uploads" element={<UploadsPage />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/classification" element={<ClassificationPage />} />
+          <Route path="/summaries" element={<SummariesPage />} />
+          <Route path="/pnl" element={<PnLPage />} />
+          <Route path="/reconciliation" element={<ReconciliationPage />} />
+          <Route path="*" element={<Navigate to="/uploads" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
